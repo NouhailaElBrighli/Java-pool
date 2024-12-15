@@ -5,10 +5,10 @@ public class Program  {
     public static void main(String[] args) {
         System.out.print("-> ");
         Scanner scanner = new Scanner(System.in);
-        try {
+        try { // maybe we should not use try-catch
             int inputNum = scanner.nextInt();
             int steps = 1;
-            String msg = "";
+            String msg = ""; // don't use non-primitive types
             if (inputNum <= 0 || inputNum == 1 || inputNum % 2 == 0) {
                 if (inputNum <= 0 || inputNum == 1) {
                     msg = "IllegalArgument";
