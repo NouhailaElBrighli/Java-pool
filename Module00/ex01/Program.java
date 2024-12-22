@@ -15,19 +15,11 @@ public class Program  {
         Scanner scanner = new Scanner(System.in);
         int inputNum = scanner.nextInt();
         int steps = 1;
-        if (inputNum % 2 == 0 && inputNum > 0) {
-            System.out.println("false 1");
-            System.exit(0);
-        }
         if (inputNum <= 0 || inputNum == 1) {
             System.err.println("IllegalArgument");
             System.exit(-1);
         }
-        else if (inputNum == 2) {
-            System.out.println("true 1");
-            System.exit(0);
-        }
-        for (int i = 3; i <= square(inputNum); i+= 2) {
+        for (int i = 2; i <= square(inputNum); i++) {
             if (inputNum % i == 0) {
                 System.out.println("false " + steps);
                 System.exit(0);
