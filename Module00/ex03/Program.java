@@ -2,59 +2,70 @@ import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
-        System.out.print("->");
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        String msgError = "";
+        String input = "";
         int numberOfWeeks = 1;
-        int storeMinimumGrades = 0;
-        while (!input.equals("42") && numberOfWeeks < 18) {
+        long storeMinimumGrades = 0;
+        long factor = 1;
+        while (numberOfWeeks <= 18) {
+            // System.out.print("->");
+            input = scanner.nextLine();
+            if (input.equals("42")) {
+                break;
+            }
             if (input.equals("Week " + numberOfWeeks)) {
+                if (numberOfWeeks == 17) {
+                    System.out.print("storeMinimumGrades->" + storeMinimumGrades);
+                }
                 numberOfWeeks++;
-                int min = scanner.nextInt();
+                long min = scanner.nextInt();
                 for (int i = 1; i < 5; i++) {
                     int integer = scanner.nextInt();
+                    if (integer <= 0 || integer > 9) {
+                        System.err.println("IllegalArgument wrong range of grades");
+                        System.exit(-1);
+                    }
                     if (integer < min) {
                         min = integer;
                     }
                 }
                 String lastNewLine = scanner.nextLine();
-                // should we check for wrong input in lastNewLine ?
-                if (input == "Week 1") {
-                    storeMinimumGrades = min;
-                } else {
-                    storeMinimumGrades *= 10;
+                if (lastNewLine.equals("")) {
+                    if (numberOfWeeks == 18) {
+                        System.out.println("storeMinimumGrades--->" + storeMinimumGrades);
+                    }
+                    min *= factor;
                     storeMinimumGrades += min;
+                    if (numberOfWeeks == 18) {
+                        System.out.println("here");
+                        System.out.println("storeMinimumGrades--->" + storeMinimumGrades);
+                    }
+                } else {
+                    System.err.println("IllegalArgument too many test arguments");
+                    System.exit(-1);
                 }
             } else {
-                msgError = "IllegalArgument";
-                break;
+                System.err.println("IllegalArgument");
+                System.exit(-1);
             }
-            System.out.print("->");
-            input = scanner.nextLine();
+             if (numberOfWeeks == 18) {
+                System.out.println("factor--->" + factor);
+            }
+            factor *= 10;
         }
-        if (!msgError.equals("")) {
-            System.err.println(msgError);
-        } else {
-            int reversedGrades = 0;
-            while (storeMinimumGrades != 0) {
-                int lastDigit = storeMinimumGrades % 10;
-                reversedGrades = reversedGrades * 10 + lastDigit;
-                storeMinimumGrades /= 10;
+        int Weeks = 1;
+        while (storeMinimumGrades > 0) {
+            long digit = storeMinimumGrades % 10;
+            storeMinimumGrades /= 10;
+            System.out.print("Week ");
+            System.out.print(Weeks + " ");
+            while (digit > 0) {
+                System.out.print("=");
+                digit--;
             }
-            int i = 1;
-            while (reversedGrades > 0) {
-                int digit = reversedGrades % 10;
-                reversedGrades /= 10;
-                System.out.print("Week ");
-                System.out.print(i);
-                while (digit > 0) {
-                    System.out.print("=");
-                    digit--;
-                }
-                System.out.println(">");
-                i++;
-            }
+            System.out.println(">");
+            Weeks++;
         }
+        scanner.close();
     }
 }

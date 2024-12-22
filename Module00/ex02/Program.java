@@ -4,12 +4,18 @@ public class Program {
 
     public static int sum(int n) {
         int sumNumber = 0;
+        int sign = 1;
+        if (n < 0) {
+            n = n * -1;
+            sign = -1;
+        }
         while (n > 0) {
             int num = n % 10;
             n = n / 10;
             sumNumber += num;
         }
-        return sumNumber;
+
+        return sign * sumNumber;
     }
 
     public static int square(int n) {
@@ -27,11 +33,10 @@ public class Program {
         while (inputNum != 42) {
             inputNum = scanner.nextInt();
             boolean isPrime = true;
-            int sumNumber = 0;
-            if (inputNum < 0) {
-                inputNum = -inputNum;
+            int sumNumbe = sum(inputNum);
+            if (inputNum <= 1) {
+                continue;
             }
-            sumNumber = sum(inputNum);
             for (int i = 2; i <= square(sumNumber); i++) {
                 if (sumNumber % i == 0) {
                     isPrime = false;
