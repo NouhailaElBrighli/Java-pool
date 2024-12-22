@@ -1,7 +1,7 @@
 
 public class Program  {
     public static void main(String[] args) {
-        int number = -15;
+        int number = 198131;
         int sumNumber = 0;
         if (number < 0) {
             number = -number;
