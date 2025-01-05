@@ -26,19 +26,76 @@ public class Program {
     }
 
     public static void printArray(String[] array) {
+        System.out.println("-------------Students----------------");
         for(int i = 0; i < array.length; i++) {
             System.out.println("students:" + array[i]);
+        }
+    }
+
+    public static int check_day(String[] days, String day) {
+        for (int i = 0; i < days.length; i++) {
+            if (day.equals(days[i])){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static String[][] addClass(String[][] classes, String time, String day) {
+        String[][] newClass = new String[classes.length + 1][2];
+        for(int i = 0; i < classes.length; i++) {
+            newClass[i] = classes[i];
+        }
+        newClass[classes.length][0] = time;
+        newClass[classes.length][1] = day;
+        return newClass;
+    }
+
+    public static String[][] getClasses(String[] days, Scanner scanner) {
+        String line = scanner.nextLine();
+        String [][] classes = new String[1][2];
+        boolean firstClass = true;
+        while (!line.equals(".")) {
+            char [] splitLine = line.toCharArray();
+            if (splitLine.length != 4 || !(splitLine[0] >= '1' && splitLine[0] <= '6') || splitLine[1] != ' ') {
+                System.err.println("ERROR1");
+                System.exit(-1);
+            }
+            int index = check_day(days, "" + splitLine[2] + splitLine[3]);
+            if (index == -1) {
+                System.err.println("ERROR2");
+                System.exit(-1);
+            }
+            if (firstClass) {
+                classes[0][0] = "" + splitLine[0];
+                classes[0][1] = days[index];
+                firstClass = false;
+            } else {
+                classes = addClass(classes, "" + splitLine[0], days[index]);
+            }
+            line = scanner.nextLine();
+        }
+        return classes;
+    }
+
+    public static void printClasses(String[][] classes) {
+        for (int i = 0; i < classes.length; i++) {
+            System.out.println("{" + classes[i][0] + "," + classes[i][1] + "}");
         }
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String[] students = getStudents(scanner);
+        String[] days = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
         if (students[0] == null) {
             System.err.println("No student found");
             System.exit(-1);
         }
-        printArray(students);
+        // printArray(students);
+        String[][] classes = getClasses(days, scanner);
+        printClasses(classes);
+
     }
 }
 
