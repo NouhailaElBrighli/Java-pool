@@ -2,33 +2,51 @@ import java.util.Scanner;
 
 public class Program {
 
-    public static String[] addStudent(String[] students, String student) {
-        String[] newStudents = new String[students.length + 1];
-        for (int i = 0; i < students.length; i++) {
-            newStudents[i] = students[i];
+    public static void printErrorAndExit(String error) {
+        System.err.println(error);
+        System.exit(-1);
+    }
+
+    public static String[] resizeArray(String[] oldArray, String element) {
+        if (oldArray.length == 1 && oldArray[0] == null) {
+            oldArray[0] = element;
+            return oldArray;
         }
-        newStudents[students.length] = student;
-        return newStudents;
+        String[] newArray = new String[oldArray.length + 1];
+        for (int i = 0; i < oldArray.length; i++) {
+            newArray[i] = oldArray[i];
+        }
+        newArray[oldArray.length] = element;
+        return newArray;
+    }
+
+    public static boolean checkCharacter(char[] studentArray, char c) {
+        for (int i = 0; i < studentArray.length; i++) {
+            if (studentArray[i] == c) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String[] getStudents(Scanner scanner) {
         String[] students = new String[1];
         String student = scanner.nextLine();
-        if (!student.equals(".")){
-            students[0] = student;
-            student = scanner.nextLine();
-        }
         while (!student.equals(".")) {
-            students = addStudent(students, student);
+            char [] studentArray = student.toCharArray();
+            if (studentArray.length > 10 || checkCharacter(studentArray, ' ')) {
+                printErrorAndExit("ERROR: Maximum length of a student\'s name is 10 (no spaces)");
+            }
+            students = resizeArray(students, student);
             student = scanner.nextLine();
         }
         return students;
     }
 
     public static void printArray(String[] array) {
-        System.out.println("-------------Students----------------");
+        System.out.println("-------------printArray----------------");
         for(int i = 0; i < array.length; i++) {
-            System.out.println("students:" + array[i]);
+            System.out.println(i + "->" + array[i]);
         }
     }
 
@@ -42,6 +60,11 @@ public class Program {
     }
 
     public static String[][] addClass(String[][] classes, String time, String day) {
+        if (classes.length == 1 && classes[0][0] == null) {
+            classes[0][0] = time;
+            classes[0][1] = day;
+            return classes;
+        }
         String[][] newClass = new String[classes.length + 1][2];
         for(int i = 0; i < classes.length; i++) {
             newClass[i] = classes[i];
@@ -54,25 +77,16 @@ public class Program {
     public static String[][] getClasses(String[] days, Scanner scanner) {
         String line = scanner.nextLine();
         String [][] classes = new String[1][2];
-        boolean firstClass = true;
         while (!line.equals(".")) {
             char [] splitLine = line.toCharArray();
             if (splitLine.length != 4 || !(splitLine[0] >= '1' && splitLine[0] <= '6') || splitLine[1] != ' ') {
-                System.err.println("ERROR1");
-                System.exit(-1);
+                printErrorAndExit("invalid input");
             }
             int index = check_day(days, "" + splitLine[2] + splitLine[3]);
             if (index == -1) {
-                System.err.println("ERROR2");
-                System.exit(-1);
+                printErrorAndExit("invalid input");
             }
-            if (firstClass) {
-                classes[0][0] = "" + splitLine[0];
-                classes[0][1] = days[index];
-                firstClass = false;
-            } else {
-                classes = addClass(classes, "" + splitLine[0], days[index]);
-            }
+            classes = addClass(classes, "" + splitLine[0], days[index]);
             line = scanner.nextLine();
         }
         return classes;
@@ -84,17 +98,42 @@ public class Program {
         }
     }
 
+    public static String[] buildVisitArray(String line) {
+        char[] lineChars = line.toCharArray();
+        String word = "";
+        String[] visits = new String[1];
+        for (int i = 0; i < lineChars.length; i++) {
+            if (lineChars[i] != ' ') {
+                word += lineChars[i];
+            } else {
+                visits = resizeArray(visits, word);
+                word = "";
+            }
+        }
+        return visits;
+    }
+
+    public static void getVisits(Scanner scanner, String[] students, String[] days, String[][] classes) {
+        String line = scanner.nextLine();
+        String[] visits = buildVisitArray(line);
+        printArray(visits);
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String[] students = getStudents(scanner);
         String[] days = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
         if (students[0] == null) {
-            System.err.println("No student found");
-            System.exit(-1);
+            printErrorAndExit("ERROR: invalid students input");
         }
         // printArray(students);
         String[][] classes = getClasses(days, scanner);
-        printClasses(classes);
+        if (classes[0][0] == null) { // maybe it's valid
+            printErrorAndExit("ERROR: invalid classes input");
+        }
+        getVisits(scanner, students, days, classes);
+        // printClasses(classes);
+
 
     }
 }
@@ -108,7 +147,7 @@ public class Program {
 // -> Mike
 // -> .
 // -> 2 MO
-// -> 4 WE
+// -> 4 WE 
 // -> .
 // -> Mike 2 28 NOT_HERE
 // -> John 4 9 HERE
@@ -118,6 +157,8 @@ public class Program {
 // John     |          |        1|          |          |          |          |          |          |
 // Mike     |          |        1|          |          |          |          |        -1|          |
 // $>
+
+
 
 // MO, TU, WE, TH, FR, SA, SU
 
