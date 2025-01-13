@@ -2,6 +2,22 @@ import java.util.Scanner;
 
 public class Program {
 
+    public static void print2DArray(String[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                System.out.print(array[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void printArray(String[] array) {
+        System.out.println("-------------printArray----------------");
+        for(int i = 0; i < array.length; i++) {
+            System.out.println(i + "->" + array[i]);
+        }
+    }
+
     public static void printErrorAndExit(String error) {
         System.err.println(error);
         System.exit(-1);
@@ -20,6 +36,15 @@ public class Program {
         return newArray;
     }
 
+    public static int isIncludes(String[] array, String str) {
+        for (int i = 0; i < array.length; i++) {
+            if (str.equals(array[i])){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static boolean checkCharacter(char[] studentArray, char c) {
         for (int i = 0; i < studentArray.length; i++) {
             if (studentArray[i] == c) {
@@ -33,8 +58,7 @@ public class Program {
         String[] students = new String[1];
         String student;
         while (!(student = scanner.nextLine()).equals(".")) {
-            char [] studentArray = student.toCharArray();
-            if (studentArray.length > 10 || checkCharacter(studentArray, ' ')) {
+            if (student.length() > 10 || checkCharacter(student.toCharArray(), ' ')) {
                 printErrorAndExit("ERROR: Maximum length of a student\'s name is 10 (no spaces)");
             }
             students = resizeArray(students, student);
@@ -42,27 +66,11 @@ public class Program {
         return students;
     }
 
-    public static void printArray(String[] array) {
-        System.out.println("-------------printArray----------------");
-        for(int i = 0; i < array.length; i++) {
-            System.out.println(i + "->" + array[i]);
-        }
-    }
-
-    public static int isIncludes(String[] array, String str) {
-        for (int i = 0; i < array.length; i++) {
-            if (str.equals(array[i])){
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public static String[] buildArrayFromLine(String line) {
         char[] lineChars = line.toCharArray();
         String word = "";
         String[] newArray = new String[1];
-        for (int i = 0; i < lineChars.length; i++) {
+        for (int i = 0; i < line.length(); i++) {
             if (lineChars[i] != ' ') {
                 word += lineChars[i];
             }
@@ -93,7 +101,6 @@ public class Program {
         return newArray;
     }
 
-
     public static String[][] getClasses(String[] days, Scanner scanner) {
         String line;
         String [][] classes =  new String[1][2];
@@ -106,30 +113,10 @@ public class Program {
             if (lesson.length != 2 || lesson[0] == null || lesson[0].length() != 1 ||  !(c >= '1' && c <= '6') || isIncludes(days, lesson[1]) == -1) {
                 printErrorAndExit("invalid input");
             }
-            // classes = buildClasses(classes, lesson);
             classes = build2Darray(classes, lesson, 2);
         }
         return classes;
     }
-
-
-    public static void printClasses(String[][] classes) {
-        for (int i = 0; i < classes.length; i++) {
-            System.out.println("{" + classes[i][0] + "," + classes[i][1] + "}");
-        }
-    }
-
-    public static void print2DArray(String[][] classes) {
-        
-    }
-
-
-    // public static String[][] buildVisits(String[][] visits, String[] visit) {
-    //     if (visits[0][0] == null) {
-    //         visits[0][0] = visit[0];
-    //         visits[0][1]
-    //     }
-    // }
 
     public static String[][] getVisits(Scanner scanner, String[] students, String[] days, String[][] classes) {
         String line;
@@ -157,9 +144,9 @@ public class Program {
         if (classes[0][0] == null) { // maybe it's valid
             printErrorAndExit("ERROR: invalid classes input");
         }
-        printClasses(classes);
+        print2DArray(classes);
         String[][] visits = getVisits(scanner, students, days, classes);
-        // printClasses(classes);
+        print2DArray(visits);
 
 
     }
